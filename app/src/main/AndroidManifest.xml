@@ -16,10 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivitySize8x8"
-            android:label="@string/title_activity_main_activity_size8x8" >
-        </activity>
     </application>
 
 </manifest>

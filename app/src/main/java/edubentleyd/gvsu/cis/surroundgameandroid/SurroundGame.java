@@ -18,13 +18,13 @@ public class SurroundGame {
     /** represents the total amount of players dead/alive. default 2*/
     private int totalPlayers = 2;
     /** represents the dimensions of the board. default 10 */
-    private int boardSize = 10;
+    private int boardSize = 7;
     /** creates the maximum number of players allowed in a game */
-    final private int MAXPLAYERS = 8;
+    final private int MAXPLAYERS = 5;
     /** creates the minimum number of players allowed in a game */
     final private int MINPLAYERS = 2;
     /** creates the maximum size the board can be */
-    final private int MAXBOARDSIZE = 20;
+    final private int MAXBOARDSIZE = 7;
     /** creates the minimum size the board can be */
     final private int MINBOARDSIZE = 3;
 
@@ -52,7 +52,7 @@ public class SurroundGame {
         if(dimensions >= MINBOARDSIZE && dimensions <= MAXBOARDSIZE)
             boardSize = dimensions;
         else
-            boardSize = 10;
+            boardSize = 7;
         //sets the players to default if the input is improper
         if(players < MINPLAYERS || players > MAXPLAYERS)
             totalPlayers = 2;
@@ -63,7 +63,7 @@ public class SurroundGame {
         for(int row = 0; row < boardSize; row++)
             for(int col = 0; col < boardSize; col++)
                 board[row][col] = new Cell();
-        //standardized reset, used elsewhere, sets player to 0
+        //standardized reset, sets player to 0
         reset();
         //sets the starting player to 0 if the input is improper
         if(startPlayer < 1 || startPlayer > totalPlayers)
