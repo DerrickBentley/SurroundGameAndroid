@@ -1,16 +1,19 @@
 package edubentleyd.gvsu.cis.surroundgameandroid;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.view.menu.MenuView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 
 public class MainActivity extends AppCompatActivity implements  View.OnClickListener {
 
@@ -19,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     /** is the number of players in the game. */
     int players;
     /** puts all the XML buttons into an int array to be referenced easier */
-    private static final int[] BUTTONS = {
+    /*private static final int[] BUTTONS = {
             R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6,
             R.id.button7, R.id.button8, R.id.button9, R.id.button10, R.id.button11, R.id.button12,
             R.id.button13, R.id.button14, R.id.button15, R.id.button16, R.id.button17,
@@ -29,7 +32,19 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
             R.id.button33, R.id.button34, R.id.button35, R.id.button36, R.id.button37,
             R.id.button38, R.id.button39, R.id.button40, R.id.button41, R.id.button42,
             R.id.button43, R.id.button44, R.id.button45, R.id.button46, R.id.button47,
-            R.id.button48, R.id.button49 };
+            R.id.button48, R.id.button49 };*/
+    /** puts all the XML buttons into an 2d int array to be referenced easier */
+    /** easier for the purpose of resizing a board, to allow various sizes */
+    private static final int[][] BUTTONS = {{R.id.button1, R.id.button2, R.id.button3, R.id.button4,
+            R.id.button5, R.id.button6, R.id.button7,},     {R.id.button8, R.id.button9,
+            R.id.button10, R.id.button11, R.id.button12, R.id.button13, R.id.button14},
+            {R.id.button15, R.id.button16, R.id.button17, R.id.button18, R.id.button19,
+                    R.id.button20, R.id.button21},  { R.id.button22, R.id.button23, R.id.button24,
+            R.id.button25, R.id.button26, R.id.button27, R.id.button28},    {R.id.button29,
+            R.id.button30, R.id.button31, R.id.button32, R.id.button33, R.id.button34,
+            R.id.button35},     {R.id.button36, R.id.button37, R.id.button38, R.id.button39,
+            R.id.button40, R.id.button41, R.id.button42}, {R.id.button43, R.id.button44,
+            R.id.button45, R.id.button46, R.id.button47, R.id.button48, R.id.button49}};
     /** is the button array referencing BUTTONS */
     Button[][] board;
     /** initiates the actual game to be played */
@@ -38,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     private int bdsize;
     /** reset button */
     Button reset;
+    /**used in the settings dialogue */
+    Spinner spnrPlayers;
+    Spinner spnrBoardSize;
+    Spinner spnrStartingPlayer;
+    LayoutInflater inflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +66,14 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         game = new SurroundGame();
         reset = (Button)findViewById(R.id.reset);
         reset.setOnClickListener(this);
+        /*spnrPlayers = (Spinner) findViewById(R.id.spnrPlayers);
+        spnrBoardSize = (Spinner) findViewById(R.id.spnrBoardSize);
+        spnrStartingPlayer = (Spinner) findViewById(R.id.spnrStartPlayer);*/
+        inflater = getLayoutInflater();
+        View rootView = inflater.inflate(R.layout.settinglayout, null, false);
+        spnrPlayers = (Spinner) rootView.findViewById(R.id.spnrPlayers);
+        spnrBoardSize = (Spinner) rootView.findViewById(R.id.spnrBoardSize);
+        spnrStartingPlayer = (Spinner) rootView.findViewById(R.id.spnrStartPlayer);
         drawBoard();
         displayBoard();
     }
@@ -71,13 +99,27 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         bdsize = game.getBoardSize();
         startPlayer = game.getPlayer();
         board = new Button[bdsize][bdsize];
-        int i = 0;
         for(int row = 0; row < bdsize; row++){
             for(int col = 0; col < bdsize; col++){
-                    board[row][col] = (Button) findViewById(BUTTONS[i++]);
+                    board[row][col] = (Button) findViewById(BUTTONS[row][col]);
                     board[row][col].setOnClickListener(this);
+                    Button temp = (Button) findViewById(BUTTONS[row][col]);
+                    temp.setActivated(true);
                     board[row][col].invalidate();
             }
+        }
+        //disables buttons not used by game if board size isn't max.
+        try {
+            for (int row = bdsize; bdsize < BUTTONS[1].length; row++) {
+                for (int col = bdsize; bdsize < BUTTONS[1].length; col++) {
+                    (findViewById(BUTTONS[row][col])).setActivated(false);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e){
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+            alertDialog.setTitle("Attention");
+            alertDialog.setMessage(bdsize + " : " + BUTTONS[1].length);
+            alertDialog.show();
         }
     }
 
@@ -158,19 +200,68 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            // Get the layout inflater
+            /*LayoutInflater inflater = getLayoutInflater();
+            View rootView = inflater.inflate(R.layout.settinglayout, null);
+
+            spnrPlayers = (Spinner) rootView.findViewById(R.id.spnrPlayers);
+            spnrBoardSize = (Spinner) rootView.findViewById(R.id.spnrBoardSize);
+            spnrStartingPlayer = (Spinner) rootView.findViewById(R.id.spnrStartPlayer);*/
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView((inflater.inflate(R.layout.settinglayout, null)))// Add action buttons
+                    .setPositiveButton("play", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            int tempBDSize;
+                            int tempPlayers;
+                            int tempStartPlayer;
+                            try {
+                                tempBDSize = Integer.parseInt
+                                        (spnrBoardSize.getSelectedItem().toString());
+                                tempPlayers = Integer.parseInt
+                                        (spnrPlayers.getSelectedItem().toString());
+                                tempStartPlayer = Integer.parseInt
+                                        (spnrStartingPlayer.getSelectedItem().toString());
+                                game.setBoardSize(tempBDSize);
+                                game.setTotalPlayers(tempPlayers);
+                                game.setPlayer(tempStartPlayer);
+                                drawBoard();
+                                displayBoard();
+                            } catch (Error e) {
+                                dialog.cancel();
+                            }
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            builder.create();
+            builder.show();
             return true;
         }
-        if (id == R.id.quitButton) {
+        if (id == R.id.quit) {
             System.exit(1);
             return true;
         }
-        if (id == R.id.helpButton) {
-            AlertDialog helpDialog = new AlertDialog.Builder(MainActivity.this).create();
+        if (id == R.id.help) {
+            final AlertDialog.Builder helpDialog = new AlertDialog.Builder(MainActivity.this);
             helpDialog.setTitle("Info.");
             helpDialog.setMessage("Surround opposing players from the north, south, east and west" +
                     "in order to eliminate them. Be the last player alive to win!");
+            helpDialog.setPositiveButton("okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
             helpDialog.show();
             return true;
         }

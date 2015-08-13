@@ -3,5 +3,22 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main_activity_size8x8">MainActivitySize8x8</string>
+    <string name="quit">Quit</string>
+    <string name="help">Help</string>
+    <string name="Tweet">Twitter</string>
+    <string name="Configure">Configure</string>
+
+    <string-array name="players">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="boardSize">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
 </resources>
