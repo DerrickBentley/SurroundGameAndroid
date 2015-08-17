@@ -1,9 +1,12 @@
 package edubentleyd.gvsu.cis.surroundgameandroid;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.internal.view.menu.MenuView;
@@ -15,12 +18,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 
-public class MainActivity extends AppCompatActivity implements  View.OnClickListener {
+public class MainActivity extends FragmentActivity implements  View.OnClickListener,
+                                                     SettingsDialogFragment.NoticeDialogListener{
 
     /** is the starting player */
     int startPlayer;
     /** is the number of players in the game. */
     int players;
+    /** gets the initial board size from the game */
+    private int bdsize;
     /** puts all the XML buttons into an int array to be referenced easier */
     /*private static final int[] BUTTONS = {
             R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6,
@@ -49,15 +55,14 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     Button[][] board;
     /** initiates the actual game to be played */
     private SurroundGame game;
-    /** gets the initial board size from the game */
-    private int bdsize;
     /** reset button */
     Button reset;
-    /**used in the settings dialogue */
-    Spinner spnrPlayers;
-    Spinner spnrBoardSize;
-    Spinner spnrStartingPlayer;
-    LayoutInflater inflater;
+    /**dialog for settings */
+    DialogFragment settingDialog;
+    /** spinners in the dialog */
+    Spinner totalPlayers, boardSize, startingPlayer;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +71,7 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         game = new SurroundGame();
         reset = (Button)findViewById(R.id.reset);
         reset.setOnClickListener(this);
-        /*spnrPlayers = (Spinner) findViewById(R.id.spnrPlayers);
-        spnrBoardSize = (Spinner) findViewById(R.id.spnrBoardSize);
-        spnrStartingPlayer = (Spinner) findViewById(R.id.spnrStartPlayer);*/
-        inflater = getLayoutInflater();
-        View rootView = inflater.inflate(R.layout.settinglayout, null, false);
-        spnrPlayers = (Spinner) rootView.findViewById(R.id.spnrPlayers);
-        spnrBoardSize = (Spinner) rootView.findViewById(R.id.spnrBoardSize);
-        spnrStartingPlayer = (Spinner) rootView.findViewById(R.id.spnrStartPlayer);
+
         drawBoard();
         displayBoard();
     }
@@ -201,51 +199,8 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-            // Get the layout inflater
-            /*LayoutInflater inflater = getLayoutInflater();
-            View rootView = inflater.inflate(R.layout.settinglayout, null);
-
-            spnrPlayers = (Spinner) rootView.findViewById(R.id.spnrPlayers);
-            spnrBoardSize = (Spinner) rootView.findViewById(R.id.spnrBoardSize);
-            spnrStartingPlayer = (Spinner) rootView.findViewById(R.id.spnrStartPlayer);*/
-
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            builder.setView((inflater.inflate(R.layout.settinglayout, null)))// Add action buttons
-                    .setPositiveButton("play", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            int tempBDSize;
-                            int tempPlayers;
-                            int tempStartPlayer;
-                            try {
-                                tempBDSize = Integer.parseInt
-                                        (spnrBoardSize.getSelectedItem().toString());
-                                tempPlayers = Integer.parseInt
-                                        (spnrPlayers.getSelectedItem().toString());
-                                tempStartPlayer = Integer.parseInt
-                                        (spnrStartingPlayer.getSelectedItem().toString());
-                                game.setBoardSize(tempBDSize);
-                                game.setTotalPlayers(tempPlayers);
-                                game.setPlayer(tempStartPlayer);
-                                drawBoard();
-                                displayBoard();
-                            } catch (Error e) {
-                                dialog.cancel();
-                            }
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-
-            builder.create();
-            builder.show();
+            settingDialog = new SettingsDialogFragment();
+            settingDialog.show(getFragmentManager(), "settings");
             return true;
         }
         if (id == R.id.quit) {
@@ -265,9 +220,17 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
             helpDialog.show();
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        dialog.dismiss();
     }
 
     @Override

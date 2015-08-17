@@ -1,36 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/settingsLayout">
 
     <TextView
-        android:layout_width="119dp"
-        android:layout_height="match_parent"
-        android:textAlignment="center"
-        android:text="@string/action_settings"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Players"
+        android:id="@+id/txtPlayers"
+        android:layout_row="0"
+        android:layout_column="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Board Size"
+        android:id="@+id/txtboardSize"
+        android:layout_row="1"
+        android:layout_column="0" />
 
     <Spinner
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spnrBdSize"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:entries="@array/boardSize"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Starting Player"
+        android:id="@+id/txtStartPlayer"
+        android:layout_row="2"
+        android:layout_column="0" />
+
+    <Spinner
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spnrPlayers"
-        android:spinnerMode="dropdown"
-        android:entries="@array/players"
-        android:textAlignment="center"/>
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spnrBoardSize"
-        android:spinnerMode="dropdown"
-        android:entries="@array/boardSize"
-        android:textAlignment="center" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spnrStartPlayer"
-        android:spinnerMode="dropdown"
+        android:layout_row="0"
+        android:layout_column="1"
         android:entries="@array/players"/>
 
-</LinearLayout>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spnrStartPlayer"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:entries="@array/players"/>
+</GridLayout>
