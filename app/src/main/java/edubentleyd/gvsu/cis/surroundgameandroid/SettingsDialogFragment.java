@@ -8,17 +8,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Spinner;
 
 
 /**
  * Created by DerrickBentley on 8/17/2015.
  */
 public class SettingsDialogFragment extends DialogFragment {
-
-    private Spinner totalPlayers, boardSize, startPlayer;
-    private int ttlPlay, bdSize, strtPlay;
-    private boolean selected;
 
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
@@ -52,9 +47,6 @@ public class SettingsDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View tempView = inflater.inflate(R.layout.settinglayout, null);
-        totalPlayers = (Spinner) tempView.findViewById(R.id.spnrPlayers);
-        boardSize = (Spinner) tempView.findViewById(R.id.spnrBdSize);
-        startPlayer = (Spinner) tempView.findViewById(R.id.spnrStartPlayer);
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
                 builder.setView(tempView)
@@ -70,18 +62,5 @@ public class SettingsDialogFragment extends DialogFragment {
                         });
         // Create the AlertDialog object and return it
         return builder.create();
-    }
-
-    public int getTtlPlay(){
-        return ttlPlay;
-    }
-    public int getBdSize(){
-        return bdSize;
-    }
-    public int getStrtPlay(){
-        return strtPlay;
-    }
-    public boolean getSelected(){
-        return selected;
     }
 }
