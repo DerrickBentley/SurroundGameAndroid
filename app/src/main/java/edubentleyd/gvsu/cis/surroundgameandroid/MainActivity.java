@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     /** is the number of players in the game. */
     int players;
     /** puts all the XML buttons into an int array to be referenced easier */
-
-    ArrayList<String> playerNumbers, boardNumbers;
-
     int tempStartPlayer, tempPlayers, tempBoardSize;
     /*private static final int[] BUTTONS = {
             R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6,
@@ -68,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     /**dialog for settings */
     DialogFragment settingDialog;
 
-    Spinner  totalPlayers;
-    Spinner boardSize;
-    Spinner startingPlayer;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,45 +73,6 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         game = new SurroundGame();
         reset = (Button)findViewById(R.id.reset);
         reset.setOnClickListener(this);
-
-        LayoutInflater inflater = getLayoutInflater();
-        View tempView = inflater.inflate(R.layout.settinglayout, null);
-
-        playerNumbers = new ArrayList<String>();
-        boardNumbers = new ArrayList<String>();
-
-        ArrayAdapter<CharSequence> adapterPlayers = ArrayAdapter.createFromResource(this, R.array.players, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> adapterBoardNumbers = ArrayAdapter.createFromResource(this, R.array.boardSize, android.R.layout.simple_spinner_item);
-        adapterPlayers.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapterBoardNumbers.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        totalPlayers = (Spinner) tempView.findViewById(R.id.spnrPlayers);
-        boardSize = (Spinner) tempView.findViewById(R.id.spnrBdSize);
-        startingPlayer = (Spinner) tempView.findViewById(R.id.spnrStartPlayer);
-        Log.d(tempPlayers + "", "please");
-
-
-        totalPlayers.setAdapter(adapterPlayers);
-        boardSize.setAdapter(adapterBoardNumbers);
-        startingPlayer.setAdapter(adapterPlayers);
-
-        totalPlayers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            protected Adapter initializedAdapter=null;
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(initializedAdapter !=parent.getAdapter() ) {
-                    initializedAdapter = parent.getAdapter();
-                    return;
-                }
-                tempPlayers = Integer.parseInt(parent.getItemAtPosition(position) + "");
-                Log.d(tempPlayers + "", "please");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         drawBoard();
         displayBoard();
@@ -271,10 +225,10 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
         return super.onOptionsItemSelected(item);
     }
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
+    public void onDialogPositiveClick(DialogFragment dialog, int here, int we, int go) {
         final AlertDialog.Builder helpDialog = new AlertDialog.Builder(MainActivity.this);
         helpDialog.setTitle("Info.");
-        helpDialog.setMessage(tempPlayers + "PLEASE");
+        helpDialog.setMessage(here + " " + we + " " + go);
         helpDialog.setPositiveButton("okay", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();

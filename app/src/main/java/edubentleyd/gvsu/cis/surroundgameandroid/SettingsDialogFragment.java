@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Spinner;
 
 
 /**
@@ -15,11 +16,17 @@ import android.view.View;
  */
 public class SettingsDialogFragment extends DialogFragment {
 
+
+    Spinner totalPlayers;
+    Spinner boardSize;
+    Spinner startingPlayer;
+    int here,we,go;
+
     /* The activity that creates an instance of this dialog fragment must
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it. */
     public interface NoticeDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog);
+        public void onDialogPositiveClick(DialogFragment dialog, int arg0, int arg1, int arg2);
         public void onDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -46,13 +53,20 @@ public class SettingsDialogFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
+
         View tempView = inflater.inflate(R.layout.settinglayout, null);
+        totalPlayers = (Spinner) tempView.findViewById(R.id.spnrPlayers);
+        boardSize = (Spinner) tempView.findViewById(R.id.spnrBdSize);
+        startingPlayer = (Spinner) tempView.findViewById(R.id.spnrStartPlayer);
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
                 builder.setView(tempView)
                         .setPositiveButton("Set", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                mListener.onDialogPositiveClick(SettingsDialogFragment.this);
+                                here = Integer.parseInt(totalPlayers.getSelectedItem().toString());
+                                we = Integer.parseInt(boardSize.getSelectedItem().toString());
+                                go = Integer.parseInt(startingPlayer.getSelectedItem().toString());
+                                mListener.onDialogPositiveClick(SettingsDialogFragment.this, here, we, go);
                             }
                         })
                         .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
