@@ -103,25 +103,23 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
             for(int col = 0; col < bdsize; col++){
                     board[row][col] = (Button) findViewById(BUTTONS[row][col]);
                     board[row][col].setOnClickListener(this);
-                    Button temp = (Button) findViewById(BUTTONS[row][col]);
-                    temp.setActivated(true);
+                   // Button temp = (Button) findViewById(BUTTONS[row][col]);
+                    //temp.setActivated(true);
                     board[row][col].invalidate();
             }
         }
         //disables buttons not used by game if board size isn't max.
-        try {
-            for (int row = bdsize; bdsize < BUTTONS[1].length; row++) {
-                for (int col = bdsize; bdsize < BUTTONS[1].length; col++) {
-                    (findViewById(BUTTONS[row][col])).setActivated(false);
-                }
+        for(int row = 0; row < BUTTONS[0].length; row++){
+            for(int col = 0; col < BUTTONS[0].length; col++){
+                Button temp = (Button) findViewById(BUTTONS[row][col]);
+                if(row < bdsize && col < bdsize)
+                    temp.setVisibility(View.VISIBLE);
+                else
+                     temp.setVisibility(View.GONE);
+                temp.invalidate();
             }
-        } catch (ArrayIndexOutOfBoundsException e){
-            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("Attention");
-            alertDialog.setMessage(bdsize + " : " + BUTTONS[1].length);
-            alertDialog.show();
         }
-    }
+        }
 
     /******************************************************************
      * sets the 2d array of buttons to the appropriate values within the
@@ -226,15 +224,11 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
     }
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int here, int we, int go) {
-        final AlertDialog.Builder helpDialog = new AlertDialog.Builder(MainActivity.this);
-        helpDialog.setTitle("Info.");
-        helpDialog.setMessage(here + " " + we + " " + go);
-        helpDialog.setPositiveButton("okay", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-        helpDialog.show();
+        game.setTotalPlayers(here);
+        game.setBoardSize(we);
+        game.setPlayer(go);
+        drawBoard();
+        displayBoard();
     }
 
     @Override
