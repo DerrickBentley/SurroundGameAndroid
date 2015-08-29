@@ -165,15 +165,16 @@ public class MainActivity extends AppCompatActivity implements  View.OnClickList
             //JOptionPane.showMessageDialog(null,"Player " + loser + " Loses!");
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
             alertDialog.setTitle("Attention");
+            alertDialog.setCanceledOnTouchOutside(true);
             game.killPlayer(loser);
             //if indeed a player was killed we are going to check if
             //there are anymore remaining players playing the game
             if(game.foundAWinner()){
                 //if there was only 1 player alive, we restart the game
                 //JOptionPane.showMessageDialog(null, game.whoWon() + " " + "Player won!");
+                alertDialog.setMessage("Player " + game.whoWon() + " Won!");
                 game.reset();
                 drawBoard();
-                alertDialog.setMessage("Player " + game.whoWon() + " Won!");
             }
             else
                 alertDialog.setMessage("Player " + loser + " Eliminated");
